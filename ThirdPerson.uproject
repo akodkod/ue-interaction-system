@@ -17,6 +17,14 @@
 			"TargetAllowList": [
 				"Editor"
 			]
+		},
+		{
+			"Name": "SimplyInteractable",
+			"Enabled": false
+		},
+		{
+			"Name": "SimplyInteractableBlueprint",
+			"Enabled": false
 		}
 	]
 }

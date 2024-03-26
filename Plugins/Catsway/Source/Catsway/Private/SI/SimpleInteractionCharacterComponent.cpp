@@ -1,14 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SimplyInteractableCharacterComponent.h"
+#include "SI/SimpleInteractionCharacterComponent.h"
 
-#include "SimplyInteractable.h"
+#include "SI/SimpleInteraction.h"
 #include "Camera/CameraComponent.h"
 
 
 // Sets default values for this component's properties
-USimplyInteractableCharacterComponent::USimplyInteractableCharacterComponent()
+USimpleInteractionCharacterComponent::USimpleInteractionCharacterComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -19,7 +19,7 @@ USimplyInteractableCharacterComponent::USimplyInteractableCharacterComponent()
 
 
 // Called when the game starts
-void USimplyInteractableCharacterComponent::BeginPlay()
+void USimpleInteractionCharacterComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -29,14 +29,14 @@ void USimplyInteractableCharacterComponent::BeginPlay()
 
 
 // Called every frame
-void USimplyInteractableCharacterComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void USimpleInteractionCharacterComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
 }
 
-void USimplyInteractableCharacterComponent::TraceForInteractableObject()
+void USimpleInteractionCharacterComponent::TraceAndFocusOnInteractableActor()
 {
 	APawn* OwningPawn = GetOwner<APawn>();
 	if (!OwningPawn) return;
@@ -73,7 +73,7 @@ void USimplyInteractableCharacterComponent::TraceForInteractableObject()
 		
 		AActor* HitActor = HitResult.GetActor();
 		
-		if (HitActor && HitActor->Implements<USimplyInteractable>() && ISimplyInteractable::Execute_CanPlayerInteract(HitActor))
+		if (HitActor && HitActor->Implements<USimpleInteraction>() && ISimpleInteraction::Execute_CanPlayerInteract(HitActor))
 		{
 			FocusInteractableActor(HitActor);
 		}
@@ -92,28 +92,28 @@ void USimplyInteractableCharacterComponent::TraceForInteractableObject()
 	}
 }
 
-void USimplyInteractableCharacterComponent::FocusInteractableActor(AActor* Interactable)
+void USimpleInteractionCharacterComponent::FocusInteractableActor(AActor* Interactable)
 {
 	if (FocusedInteractableActor == Interactable) return;
 	if (FocusedInteractableActor) UnfocusCurrentInteractableActor();
 
 	FocusedInteractableActor = Interactable;
-	ISimplyInteractable::Execute_PlayerFocuses(FocusedInteractableActor);
+	ISimpleInteraction::Execute_PlayerFocuses(FocusedInteractableActor);
 }
 
-void USimplyInteractableCharacterComponent::UnfocusCurrentInteractableActor()
+void USimpleInteractionCharacterComponent::UnfocusCurrentInteractableActor()
 {
 	if (!FocusedInteractableActor) return;
 
-	ISimplyInteractable::Execute_PlayerUnfocuses(FocusedInteractableActor);
+	ISimpleInteraction::Execute_PlayerUnfocuses(FocusedInteractableActor);
 	FocusedInteractableActor = nullptr;
 }
 
-void USimplyInteractableCharacterComponent::InteractWithFocusedObject()
+void USimpleInteractionCharacterComponent::InteractWithFocusedActor()
 {
 	if (!FocusedInteractableActor) return;
 
-	ISimplyInteractable::Execute_PlayerInteracts(FocusedInteractableActor);
+	ISimpleInteraction::Execute_PlayerInteracts(FocusedInteractableActor);
 }
 
 
